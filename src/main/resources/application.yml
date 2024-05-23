@@ -1,8 +1,52 @@
+spring:
+  profiles:
+    active: ${profile}
+
+---
+spring:
+  config:
+    activate:
+      on-profile: main
+  datasource:
+    url: jdbc:mariadb://localhost:3306/cpumonitor
+    username: cpumonitor
+    password: cpumonitor13579
+    driver-class-name: org.mariadb.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MariaDBDialect
+
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: 
+  jpa:
+    hibernate:
+      ddl-auto: create
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
 logging:
   level:
     '[org.springframework.web]': debug
 
-spring:
-  mvc:
-    pathmatch:
-      matching-strategy: ant_path_matcher
+mvc:
+  pathmatch:
+    matching-strategy: ant_path_matcher
