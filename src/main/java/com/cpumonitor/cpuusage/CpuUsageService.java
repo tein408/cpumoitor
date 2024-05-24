@@ -104,4 +104,23 @@ public class CpuUsageService {
         }
     }
 
+    /**
+     * 특정 기간의 일 단위 CPU 사용률 데이터를 가져옵니다.
+     * 
+     * @param startDate 시작 날짜입니다.
+     * @param endDate 종료 날짜입니다.
+     * @return 일 단위 CPU 사용률 데이터 목록입니다.
+     * @throws CpuUsageServiceException 데이터를 가져오는 동안 오류가 발생한 경우
+     */
+    public List<DailyUsageDTO> getDailyCpuUsage(LocalDate startDate, LocalDate endDate) {
+        try {
+            LocalDateTime startDateTime = LocalDateTime.of(startDate, LocalTime.MIN);
+            LocalDateTime endDateTime = LocalDateTime.of(endDate, LocalTime.MAX);
+            log.info("Service - Fetching daily CPU usage data from {} to {}", startDateTime, endDateTime);
+            return cpuUsageRepository.findDailyUsage(startDateTime, endDateTime);
+        } catch (Exception e) {
+            log.error("Service - Failed to fetch daily CPU usage data from {} to {}: {}", startDate, endDate, e.getMessage());
+            throw new CpuUsageServiceException("Error occurred while fetching daily CPU usage data", e);
+        }
+    }
 }

@@ -99,4 +99,35 @@ public class CpuUsageController {
         }
     }
 
+    /**
+     * 일 단위 CPU 사용률 데이터를 조회합니다.
+     *
+     * @param startDate 조회할 시작 날짜입니다.
+     * @param endDate   조회할 종료 날짜입니다.
+     * @return 일 단위 CPU 사용률 데이터 목록입니다.
+     */
+    @ApiOperation(value = "일 단위 CPU 사용률 데이터 조회", notes = "지정된 시작 날짜와 종료 날짜 사이의 일 단위 CPU 사용률 데이터를 조회합니다. 입력하지 않은 경우 최근 1년의 데이터를 제공합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "성공적으로 조회됨"),
+            @ApiResponse(code = 500, message = "서버 오류")
+    })
+    @GetMapping("/cpu-usage/day")
+    public ResponseEntity<List<DailyUsageDTO>> getDailyCpuUsage(
+            @ApiParam(value = "조회할 시작 날짜 (예: 2024-05-01)", required = false, example = "2024-05-01") @RequestParam(value = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @ApiParam(value = "조회할 종료 날짜 (예: 2024-05-31)", required = false, example = "2024-05-31") @RequestParam(value = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+        if (startDate == null || endDate == null) {
+            endDate = LocalDate.now();
+            startDate = endDate.minusYears(1);
+        }
+        try {
+            log.info("Controller - Fetching daily CPU usage data from {} to {}", startDate, endDate);
+            List<DailyUsageDTO> dailyUsageDTOs = cpuUsageService.getDailyCpuUsage(startDate, endDate);
+            return new ResponseEntity<>(dailyUsageDTOs, HttpStatus.OK);
+        } catch (Exception e) {
+            log.error("Controller - Failed to fetch daily CPU usage data from {} to {}: {}", startDate, endDate,
+                    e.getMessage());
+            return new ResponseEntity<>(Collections.emptyList(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 }
