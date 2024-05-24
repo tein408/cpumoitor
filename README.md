@@ -1,7 +1,20 @@
 # CPU 사용률 수집 및 조회 API
 서버의 CPU 사용률을 분 단위로 수집하고 지정한 조건에 따라 조회하는 API 입니다.
 
-## 프로젝트 설정 및 실행 방법
+## 개발 환경
+
+```
+Java 11
+Spring Boot 2.5.8
+Spring Data JPA
+Gradle 7.3
+Swagger 3.0
+
+H2 Database 2.2.224
+MariaDB 11.3.2
+```
+
+## 프로젝트 설정 및 실행 방법 (macOS 기준)
 1. 설정 
 
     이 Repository를 클론합니다.
@@ -246,3 +259,10 @@
     - Status Code: 500
     - Content: 빈 목록
 
+## Test Coverage 확인
+
+터미널에서 아래의 명령어를 입력한 후 프로젝트 폴더 내의 `cpumonitor/build/jacoco/report.html` 경로에서 `index.html` 을 실행하여 확인할 수 있습니다.
+
+```bash
+./gradlew check
+```
