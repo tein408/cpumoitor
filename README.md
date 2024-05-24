@@ -141,18 +141,18 @@
     ```json
     [
         {
-            "idleUsage": 0,
+            "idleUsage": 0.0,
             "recordedAt": "2024-05-24T16:59:02.201Z",
-            "systemUsage": 0,
-            "userUsage": 0
+            "systemUsage": 0.0,
+            "userUsage": 0.0
         }
     ]
     ```
     ```java
-    "idleUsage": 0,                             # idle usage를 나타냅니다
-    "recordedAt": "2024-05-24T16:59:02.201Z",   # 사용률 조회 시간을 나타냅니다
-    "systemUsage": 0,                           # system usage를 나타냅니다
-    "userUsage": 0                              # user usage를 나타냅니다
+    "idleUsage": 0.0,                           # idle usage를 나타냅니다.
+    "recordedAt": "2024-05-24T16:59:02.201Z",   # 사용률 조회 시간을 나타냅니다. Java의 LocalDateTime 타입을 사용합니다.
+    "systemUsage": 0.0,                         # system usage를 나타냅니다.
+    "userUsage": 0.0                            # user usage를 나타냅니다.
     ```
 - 실패 응답:
     - Status Code: 500
@@ -171,30 +171,30 @@
     ```json
     [
         {
-            "avgIdleUsage": 0,
-            "avgSystemUsage": 0,
-            "avgUserUsage": 0,
-            "maxIdleUsage": 0,
-            "maxSystemUsage": 0,
-            "maxUserUsage": 0,
-            "minIdleUsage": 0,
-            "minSystemUsage": 0,
-            "minUserUsage": 0,
+            "avgIdleUsage": 0.0,
+            "avgSystemUsage": 0.0,
+            "avgUserUsage": 0.0,
+            "maxIdleUsage": 0.0,
+            "maxSystemUsage": 0.0,
+            "maxUserUsage": 0.0,
+            "minIdleUsage": 0.0,
+            "minSystemUsage": 0.0,
+            "minUserUsage": 0.0,
             "recordedAt": "string"
         }
     ]
     ```
     ```java
-    "avgIdleUsage": 0       # idle usage 평균을 나타냅니다
-    "avgSystemUsage": 0     # system usage 평균을 나타냅니다
-    "avgUserUsage": 0       # user usage 평균을 나타냅니다
-    "maxIdleUsage": 0       # idle usage 최댓값을 나타냅니다
-    "maxSystemUsage": 0     # system usage 최댓값을 나타냅니다
-    "maxUserUsage": 0       # user usage 최댓값을 나타냅니다
-    "minIdleUsage": 0       # idle usage 최솟값을 나타냅니다
-    "minSystemUsage": 0     # system usage 최솟값을 나타냅니다
-    "minUserUsage": 0       # user usage 최솟값을 나타냅니다
-    "recordedAt": "string"  # 조회시간을 '2024-05-01T12:00' 문자열 형태로 리턴합니다
+    "avgIdleUsage": 0.0       # idle usage 평균값을 나타냅니다.
+    "avgSystemUsage": 0.0     # system usage 평균값을 나타냅니다.
+    "avgUserUsage": 0.0       # user usage 평균값을 나타냅니다.
+    "maxIdleUsage": 0.0       # idle usage 최댓값을 나타냅니다.
+    "maxSystemUsage": 0.0     # system usage 최댓값을 나타냅니다.
+    "maxUserUsage": 0.0       # user usage 최댓값을 나타냅니다.
+    "minIdleUsage": 0.0       # idle usage 최솟값을 나타냅니다.
+    "minSystemUsage": 0.0     # system usage 최솟값을 나타냅니다.
+    "minUserUsage": 0.0       # user usage 최솟값을 나타냅니다.
+    "recordedAt": "string"    # 기준 시간을 '2024-05-01T12:00' 문자열 형태로 나타냅니다.
     ```
 
 - 실패 응답:
@@ -217,29 +217,29 @@
     [
         {
             "date": "string",
-            "avgIdleUsage": 0,
-            "avgSystemUsage": 0,
-            "avgUserUsage": 0,
-            "maxIdleUsage": 0,
-            "maxSystemUsage": 0,
-            "maxUserUsage": 0,
-            "minIdleUsage": 0,
-            "minSystemUsage": 0,
-            "minUserUsage": 0
+            "avgIdleUsage": 0.0,
+            "avgSystemUsage": 0.0,
+            "avgUserUsage": 0.0,
+            "maxIdleUsage": 0.0,
+            "maxSystemUsage": 0.0,
+            "maxUserUsage": 0.0,
+            "minIdleUsage": 0.0,
+            "minSystemUsage": 0.0,
+            "minUserUsage": 0.0
         }
     ]
     ```
     ```java
-    "date": "string"        # 조회 날짜를 '2024-05-01' 문자열 형태로 리턴합니다
-    "avgIdleUsage": 0       # idle usage 평균을 나타냅니다
-    "avgSystemUsage": 0     # system usage 평균을 나타냅니다
-    "avgUserUsage": 0       # user usage 평균을 나타냅니다
-    "maxIdleUsage": 0       # idle usage 최댓값을 나타냅니다
-    "maxSystemUsage": 0     # system usage 최댓값을 나타냅니다
-    "maxUserUsage": 0       # user usage 최댓값을 나타냅니다
-    "minIdleUsage": 0       # idle usage 최솟값을 나타냅니다
-    "minSystemUsage": 0     # system usage 최솟값을 나타냅니다
-    "minUserUsage": 0       # user usage 최솟값을 나타냅니다
+    "date": "string"          # 기준 날짜를 '2024-05-01' 문자열 형태로 나타냅니다.
+    "avgIdleUsage": 0.0       # idle usage 평균값을 나타냅니다.
+    "avgSystemUsage": 0.0     # system usage 평균값을 나타냅니다.
+    "avgUserUsage": 0.0       # user usage 평균값을 나타냅니다.
+    "maxIdleUsage": 0.0       # idle usage 최댓값을 나타냅니다.
+    "maxSystemUsage": 0.0     # system usage 최댓값을 나타냅니다.
+    "maxUserUsage": 0.0       # user usage 최댓값을 나타냅니다.
+    "minIdleUsage": 0.0       # idle usage 최솟값을 나타냅니다.
+    "minSystemUsage": 0.0     # system usage 최솟값을 나타냅니다.
+    "minUserUsage": 0.0       # user usage 최솟값을 나타냅니다.
     ```
 
 - 실패 응답:
