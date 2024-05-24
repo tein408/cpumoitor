@@ -69,4 +69,34 @@ public class CpuUsageController {
         }
     }
 
+    /**
+     * 시간 단위 CPU 사용률 데이터를 조회합니다.
+     *
+     * @param date 데이터를 조회할 날짜입니다.
+     * @return 시간 단위 CPU 사용률 데이터 목록입니다.
+     */
+    @ApiOperation(value = "시간 단위 CPU 사용률 데이터 조회", notes = "지정된 날짜의 시간 단위 CPU 사용률 데이터를 조회합니다. 입력하지 않은 경우 최근 3달의 데이터를 제공합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "성공적으로 조회됨"),
+            @ApiResponse(code = 500, message = "서버 오류")
+    })
+    @GetMapping("/cpu-usage/hour")
+    public ResponseEntity<List<HourlyUsageDTO>> getHourlyCpuUsage(
+            @ApiParam(value = "조회할 날짜 (예: 2024-05-01)", required = false, example = "2024-05-01") @RequestParam(value = "date", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+        LocalDate startDate = date;
+        LocalDate endDate = date;
+        if (date == null) {
+            startDate = LocalDate.now().minusMonths(3);
+            endDate = LocalDate.now();
+        }
+        try {
+            log.info("Controller - Fetching hourly CPU usage data for date {}", date);
+            List<HourlyUsageDTO> hourlyUsageDTOs = cpuUsageService.getHourlyCpuUsage(startDate, endDate);
+            return new ResponseEntity<>(hourlyUsageDTOs, HttpStatus.OK);
+        } catch (Exception e) {
+            log.error("Controller - Failed to fetch hourly CPU usage data for date {}: {}", date, e.getMessage());
+            return new ResponseEntity<>(Collections.emptyList(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 }

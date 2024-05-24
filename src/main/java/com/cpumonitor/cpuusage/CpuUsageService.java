@@ -85,4 +85,23 @@ public class CpuUsageService {
         }
     }
 
+    /**
+     * 특정 날짜의 시간 단위 CPU 사용률 데이터를 가져옵니다.
+     * 
+     * @param date 데이터를 가져올 날짜입니다.
+     * @return 시간 단위 CPU 사용률 데이터 목록입니다.
+     * @throws CpuUsageServiceException 데이터를 가져오는 동안 오류가 발생한 경우
+     */
+    public List<HourlyUsageDTO> getHourlyCpuUsage(LocalDate startDate, LocalDate endDate) {
+        try {
+            LocalDateTime startDateTime = LocalDateTime.of(startDate, LocalTime.MIN);
+            LocalDateTime endDateTime = LocalDateTime.of(endDate, LocalTime.MAX);
+            log.info("Service - Fetching hourly CPU usage data for date {}", endDate);
+            return cpuUsageRepository.findHourlyUsage(startDateTime, endDateTime);
+        } catch (Exception e) {
+            log.error("Service - Failed to fetch hourly CPU usage data for date {}: {}", endDate, e.getMessage());
+            throw new CpuUsageServiceException("Error occurred while fetching hourly CPU usage data", e);
+        }
+    }
+
 }
