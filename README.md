@@ -28,8 +28,7 @@ MariaDB 11.3.2 (운영용)
 
     1) H2 Database 설정
 
-        (1) 설치
-        `http://h2database.com/html/main.html` 에 접속
+        (1) `http://h2database.com/html/main.html` 에 접속
 
         ```bash
         http://h2database.com/html/main.html
