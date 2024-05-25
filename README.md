@@ -115,11 +115,12 @@ MariaDB 11.3.2 (운영용)
     ./gradlew build
     ```
 
-4. 데이터베이스 설정을 수정합니다. (선택사항)
+4. 데이터베이스 설정을 수정합니다.
 
     `application.yml` 파일에서 접속에 필요한 데이터베이스 관련 설정을 수정합니다.
-    > 프로젝트 최초 실행시에는 17번 줄의 `ddl-auto: none` 설정을 `ddl-auto: create` 혹은 `ddl-auto: update`로 해주어야만 테이블이 생성됩니다.
-    이후 실행시에는 다시 `ddl-auto: none`으로 바꾸어 사용합니다.
+    > 프로젝트 최초 설정을 위해 테이블 생성 옵션이 `ddl-auto: create`로 설정 되어 있습니다. <br>
+    이후 운영시에는 `ddl-auto: create` 설정을  `ddl-auto: none`으로 사용해야 합니다. <br>
+    `ddl-auto: create`을 사용할 경우 애플리케이션을 매 실행시마다 테이블을 새로 생성하게되어 데이터가 데이터베이스에 누적되지 않습니다.
 
     ```yml
     spring:
@@ -133,7 +134,7 @@ MariaDB 11.3.2 (운영용)
         driver-class-name: org.mariadb.jdbc.Driver
       jpa:
         hibernate:
-          ddl-auto: none # 최초 실행시 update 혹은 create 사용, 이후는 none 사용
+          ddl-auto: create # 최초 실행시에만 create 사용, 이후는 none 사용
       ```
     
 
