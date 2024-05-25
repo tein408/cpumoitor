@@ -21,7 +21,6 @@ import com.cpumonitor.exception.CpuUsageServiceException;
 import com.cpumonitor.exception.DatabaseOperationException;
 import com.cpumonitor.exception.InvalidDataException;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -67,10 +66,10 @@ public class CpuUsageServiceTest {
 
         doThrow(RuntimeException.class).when(cpuUsageRepository).save(any(CpuUsageEntity.class));
 
-        DatabaseOperationException exception = Assertions.assertThrows(DatabaseOperationException.class, () -> {
+        DatabaseOperationException exception = assertThrows(DatabaseOperationException.class, () -> {
             cpuUsageService.saveCpuUsage(cpuUsageDTO);
         });
-        Assertions.assertEquals("Failed to save CPU usage data", exception.getMessage());
+        assertEquals("Failed to save CPU usage data", exception.getMessage());
         verify(cpuUsageRepository, times(1)).save(any(CpuUsageEntity.class));
     }
 
