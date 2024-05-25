@@ -56,8 +56,11 @@ jacoco {
 }
 
 jacocoTestReport {
-    classDirectories.setFrom(files(classDirectories.files.collect {
-        fileTree(dir: it, exclude: ['**/CpuUsageScheduler.*', '**/CpumonitorApplication.*'])
+    classDirectories.setFrom(
+        files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: [
+                '**/CpuUsageScheduler.*', '**/CpumonitorApplication.*'
+            ])
     }))
     
     reports {
@@ -73,8 +76,11 @@ jacocoTestCoverageVerification {
             enabled = true
             element = 'CLASS'
 
-            classDirectories.setFrom(files(classDirectories.files.collect {
-                fileTree(dir: it, exclude: ['**/CpuUsageScheduler.*', '**/CpumonitorApplication.*'])
+            classDirectories.setFrom(
+                files(classDirectories.files.collect {
+                    fileTree(dir: it, exclude: [
+                        '**/CpuUsageScheduler.*', '**/CpumonitorApplication.*'
+                    ])
             }))
 
             limit {

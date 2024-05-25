@@ -19,6 +19,9 @@ public class CpuUsageScheduler {
 
     private final CpuUsageService cpuUsageService;
 
+    /**
+     * CPU 사용량을 주기적으로 수집하는 메서드입니다.
+     */
     @Scheduled(cron = "0 * * * * *")
     public void collectCpuUsage() {
         try {
