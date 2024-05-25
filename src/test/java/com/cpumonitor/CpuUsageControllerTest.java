@@ -25,6 +25,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.hamcrest.Matchers.*;
@@ -132,11 +133,16 @@ public class CpuUsageControllerTest {
         when(cpuUsageService.getMinuteCpuUsage(any(LocalDateTime.class), any(LocalDateTime.class)))
                 .thenThrow(new RuntimeException("Database error"));
 
+        LocalDateTime startDateTime = LocalDateTime.parse("2024-05-01T00:00:00");
+        LocalDateTime endDateTime = LocalDateTime.parse("2024-05-01T23:59:59");
+        String expectedErrorMessage = String.format("Controller - Failed to fetch minute-level CPU usage data from %s to %s: Database error", startDateTime, endDateTime);
+    
         mockMvc.perform(get("/api/cpu-usage/minute")
                 .param("startDateTime", "2024-05-01T00:00:00")
                 .param("endDateTime", "2024-05-01T23:59:59")
                 .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isInternalServerError());
+                .andExpect(status().isInternalServerError())
+                .andExpect(content().string(expectedErrorMessage));
     }
 
     @Test
@@ -187,10 +193,14 @@ public class CpuUsageControllerTest {
         when(cpuUsageService.getHourlyCpuUsage(any(LocalDate.class), any(LocalDate.class)))
                 .thenThrow(new RuntimeException("Database error"));
 
+        LocalDate date = LocalDate.parse("2024-05-01");
+        String expectedErrorMessage = String.format("Controller - Failed to fetch hourly CPU usage data for date %s: Database error", date);
+    
         mockMvc.perform(get("/api/cpu-usage/hour")
                 .param("date", "2024-05-01")
                 .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isInternalServerError());
+                .andExpect(status().isInternalServerError())
+                .andExpect(content().string(expectedErrorMessage));
     }
 
     @Test
@@ -279,11 +289,17 @@ public class CpuUsageControllerTest {
         when(cpuUsageService.getDailyCpuUsage(any(LocalDate.class), any(LocalDate.class)))
                 .thenThrow(new RuntimeException("Database error"));
 
+        LocalDate startDate = LocalDate.parse("2024-05-01");
+        LocalDate endDate = LocalDate.parse("2024-05-31");
+        String expectedErrorMessage = String.format("Controller - Failed to fetch daily CPU usage data from %s to %s: Database error",
+        startDate, endDate);
+    
         mockMvc.perform(get("/api/cpu-usage/day")
                 .param("startDate", "2024-05-01")
                 .param("endDate", "2024-05-31")
                 .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isInternalServerError());
+                .andExpect(status().isInternalServerError())
+                .andExpect(content().string(expectedErrorMessage));
     }
 
 }

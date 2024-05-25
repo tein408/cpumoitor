@@ -17,7 +17,6 @@ import com.cpumonitor.cpuusage.cpuusageDTO.HourlyUsageDTO;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.List;
 
 import io.swagger.annotations.Api;
@@ -45,17 +44,21 @@ public class CpuUsageController {
      * @param endDateTime   종료 날짜 및 시간입니다.
      * @return CPU 사용률 데이터 목록입니다.
      */
-    @ApiOperation(value = "분 단위 CPU 사용률 데이터 조회", notes = "시작 시간과 종료 시간 사이의 분 단위 CPU 사용률 데이터를 조회합니다. 입력하지 않은 경우 최근 1주의 데이터를 제공합니다.")
+    @ApiOperation(
+        value = "분 단위 CPU 사용률 데이터 조회", 
+        notes = "시작 시간과 종료 시간 사이의 분 단위 CPU 사용률 데이터를 조회합니다. <br> <b>파라미터를 둘 중 하나라도 입력하지 않은 경우 최근 1주의 데이터를 제공합니다.</b>"
+    )
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "성공적으로 조회됨"),
-            @ApiResponse(code = 500, message = "서버 오류")
+        @ApiResponse(code = 200, message = "성공적으로 조회됨", response = CpuUsageDTO.class, responseContainer = "List"),
+        @ApiResponse(code = 500, message = "서버 오류", response = String.class)
     })
     @GetMapping("/cpu-usage/minute")
-    public ResponseEntity<List<CpuUsageDTO>> getMinuteCpuUsage(
+    public ResponseEntity<?> getMinuteCpuUsage(
             @ApiParam(value = "조회할 시작 날짜 및 시간 (예: 2024-05-01T00:00:00)", required = false, example = "2024-05-01T00:00:00") 
             @RequestParam(value = "startDateTime", required = false) 
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDateTime,
-            @ApiParam(value = "조회할 종료 날짜 및 시간 (예: 2024-05-01T23:59:59)", required = false, example = "2024-05-01T23:59:59") @RequestParam(value = "endDateTime", required = false) 
+            @ApiParam(value = "조회할 종료 날짜 및 시간 (예: 2024-05-01T23:59:59)", required = false, example = "2024-05-01T23:59:59") 
+            @RequestParam(value = "endDateTime", required = false) 
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDateTime) {
         if (startDateTime == null || endDateTime == null) {
             endDateTime = LocalDateTime.now();
@@ -66,9 +69,10 @@ public class CpuUsageController {
             List<CpuUsageDTO> cpuUsageDTOs = cpuUsageService.getMinuteCpuUsage(startDateTime, endDateTime);
             return new ResponseEntity<>(cpuUsageDTOs, HttpStatus.OK);
         } catch (Exception e) {
-            log.error("Controller - Failed to fetch minute-level CPU usage data from {} to {}: {}", startDateTime,
-                    endDateTime, e.getMessage());
-            return new ResponseEntity<>(Collections.emptyList(), HttpStatus.INTERNAL_SERVER_ERROR);
+            String errorMessage = String.format("Controller - Failed to fetch minute-level CPU usage data from %s to %s: %s",
+                    startDateTime, endDateTime, e.getMessage());
+            log.error(errorMessage);
+            return new ResponseEntity<>(errorMessage, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -78,13 +82,16 @@ public class CpuUsageController {
      * @param date 데이터를 조회할 날짜입니다.
      * @return 시간 단위 CPU 사용률 데이터 목록입니다.
      */
-    @ApiOperation(value = "시간 단위 CPU 사용률 데이터 조회", notes = "지정된 날짜의 시간 단위 CPU 사용률 데이터를 조회합니다. 입력하지 않은 경우 최근 3달의 데이터를 제공합니다.")
+    @ApiOperation(
+        value = "시간 단위 CPU 사용률 데이터 조회", 
+        notes = "지정된 날짜의 시간 단위 CPU 사용률 데이터를 조회합니다. <br><b>파라미터를 입력하지 않은 경우 최근 3달의 데이터를 제공합니다.</b>"
+    )
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "성공적으로 조회됨"),
-            @ApiResponse(code = 500, message = "서버 오류")
+        @ApiResponse(code = 200, message = "성공적으로 조회됨", response = HourlyUsageDTO.class, responseContainer = "List"),
+        @ApiResponse(code = 500, message = "서버 오류", response = String.class)
     })
     @GetMapping("/cpu-usage/hour")
-    public ResponseEntity<List<HourlyUsageDTO>> getHourlyCpuUsage(
+    public ResponseEntity<?> getHourlyCpuUsage(
             @ApiParam(value = "조회할 날짜 (예: 2024-05-01)", required = false, example = "2024-05-01") 
             @RequestParam(value = "date", required = false) 
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
@@ -99,8 +106,10 @@ public class CpuUsageController {
             List<HourlyUsageDTO> hourlyUsageDTOs = cpuUsageService.getHourlyCpuUsage(startDate, endDate);
             return new ResponseEntity<>(hourlyUsageDTOs, HttpStatus.OK);
         } catch (Exception e) {
-            log.error("Controller - Failed to fetch hourly CPU usage data for date {}: {}", date, e.getMessage());
-            return new ResponseEntity<>(Collections.emptyList(), HttpStatus.INTERNAL_SERVER_ERROR);
+            String errorMessage = String.format("Controller - Failed to fetch hourly CPU usage data for date %s: %s",
+                    date, e.getMessage());
+            log.error(errorMessage);
+            return new ResponseEntity<>(errorMessage, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -111,13 +120,16 @@ public class CpuUsageController {
      * @param endDate   조회할 종료 날짜입니다.
      * @return 일 단위 CPU 사용률 데이터 목록입니다.
      */
-    @ApiOperation(value = "일 단위 CPU 사용률 데이터 조회", notes = "지정된 시작 날짜와 종료 날짜 사이의 일 단위 CPU 사용률 데이터를 조회합니다. 입력하지 않은 경우 최근 1년의 데이터를 제공합니다.")
+    @ApiOperation(
+        value = "일 단위 CPU 사용률 데이터 조회", 
+        notes = "지정된 시작 날짜와 종료 날짜 사이의 일 단위 CPU 사용률 데이터를 조회합니다. <br><b>파라미터를 둘 중 하나라도 입력하지 않은 경우 최근 1년의 데이터를 제공합니다.</b>"
+    )
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "성공적으로 조회됨"),
-            @ApiResponse(code = 500, message = "서버 오류")
+        @ApiResponse(code = 200, message = "성공적으로 조회됨", response = DailyUsageDTO.class, responseContainer = "List"),
+        @ApiResponse(code = 500, message = "서버 오류", response = String.class)
     })
     @GetMapping("/cpu-usage/day")
-    public ResponseEntity<List<DailyUsageDTO>> getDailyCpuUsage(
+    public ResponseEntity<?> getDailyCpuUsage(
             @ApiParam(value = "조회할 시작 날짜 (예: 2024-05-01)", required = false, example = "2024-05-01") 
             @RequestParam(value = "startDate", required = false) 
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
@@ -133,9 +145,10 @@ public class CpuUsageController {
             List<DailyUsageDTO> dailyUsageDTOs = cpuUsageService.getDailyCpuUsage(startDate, endDate);
             return new ResponseEntity<>(dailyUsageDTOs, HttpStatus.OK);
         } catch (Exception e) {
-            log.error("Controller - Failed to fetch daily CPU usage data from {} to {}: {}", startDate, endDate,
-                    e.getMessage());
-            return new ResponseEntity<>(Collections.emptyList(), HttpStatus.INTERNAL_SERVER_ERROR);
+            String errorMessage = String.format("Controller - Failed to fetch daily CPU usage data from %s to %s: %s",
+                    startDate, endDate, e.getMessage());
+            log.error(errorMessage);
+            return new ResponseEntity<>(errorMessage, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
