@@ -163,13 +163,11 @@ MariaDB 11.3.2 (운영용)
 
 ### 분 단위 CPU 사용률 데이터 조회
 - URL: `/api/cpu-usage/minute`
-- Method: GET
+- Method: `GET`
 - 파라미터:
-    - startDateTime (시작 날짜 및 시간): YYYY-MM-DDTHH:MM:SS 형식의 문자열
-      (예: 2024-05-01T00:00:00)
-    - endDateTime (종료 날짜 및 시간): YYYY-MM-DDTHH:MM:SS 형식의 문자열
-      (예: 2024-05-01T23:59:59)
-    - 파라미터를 입력하지 않은 경우 최근 1주간 데이터를 조회합니다.
+    - startDateTime (시작 날짜 및 시간): `YYYY-MM-DDTHH:MM:SS` 형식의 문자열 (예: `2024-05-01T00:00:00`)
+    - endDateTime (종료 날짜 및 시간): `YYYY-MM-DDTHH:MM:SS` 형식의 문자열 (예: `2024-05-01T23:59:59`)
+    - <ins>**파라미터를 둘 중 하나라도 입력하지 않은 경우 최근 1주간 데이터를 조회합니다.**</ins>
 - 성공 응답:
     - Status Code: 200
     - Content: 분 단위 CPU 사용률 데이터 목록
@@ -191,15 +189,14 @@ MariaDB 11.3.2 (운영용)
     ```
 - 실패 응답:
     - Status Code: 500
-    - Content: 빈 목록
+    - Content: 에러 메시지 <br>
 
 ### 시간 단위 CPU 사용률 데이터 조회
 - URL: `/api/cpu-usage/hour`
-- Method: GET
+- Method: `GET`
 - 파라미터:
-    - date (조회할 날짜): YYYY-MM-DD 형식의 문자열
-      (예: 2024-05-01)
-    - 파라미터를 입력하지 않은 경우 최근 3달간 데이터를 조회합니다.
+    - date (조회할 날짜): `YYYY-MM-DD` 형식의 문자열 (예: 2024-05-01)
+    - <ins>**파라미터를 입력하지 않은 경우 최근 3달간 데이터를 조회합니다.**</ins>
 - 성공 응답:
     - Status Code: 200
     - Content: 시간 단위 CPU 사용률 데이터 목록
@@ -235,17 +232,15 @@ MariaDB 11.3.2 (운영용)
 
 - 실패 응답:
     - Status Code: 500
-    - Content: 빈 목록
+    - Content: 에러 메시지
 
 ### 일 단위 CPU 사용률 데이터 조회
 - URL: `/api/cpu-usage/day`
-- Method: GET
+- Method: `GET`
 - 파라미터:
-    - startDate (조회할 시작 날짜): YYYY-MM-DD 형식의 문자열
-      (예: 2024-05-01)
-    - endDate (조회할 종료 날짜): YYYY-MM-DD 형식의 문자열
-      (예: 2024-05-05)
-    - 파라미터를 입력하지 않은 경우 최근 1년간 데이터를 조회합니다.
+    - startDate (조회할 시작 날짜): `YYYY-MM-DD` 형식의 문자열 (예: 2024-05-01)
+    - endDate (조회할 종료 날짜): `YYYY-MM-DD` 형식의 문자열 (예: 2024-05-05)
+    - <ins>**파라미터를 둘 중 하나라도 입력하지 않은 경우 최근 1년간 데이터를 조회합니다.**</ins>
 - 성공 응답:
     - Status Code: 200
     - Content: 일 단위 CPU 사용률 데이터 목록
@@ -281,7 +276,7 @@ MariaDB 11.3.2 (운영용)
 
 - 실패 응답:
     - Status Code: 500
-    - Content: 빈 목록
+    - Content: 에러 메시지
 
 ## Test Coverage 확인
 
