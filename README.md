@@ -1,5 +1,6 @@
 # CPU 사용률 수집 및 조회 API
-서버의 CPU 사용률을 분 단위로 수집하고 지정한 조건에 따라 조회하는 API 입니다.
+서버의 CPU 사용률을 분 단위로 수집하고 지정한 조건에 따라 조회하는 API 입니다. <br>
+macOS, Linux와 같은 유닉스 기반의 운영체제에서 동작합니다.
 
 ## 개발 환경
 
@@ -10,8 +11,8 @@ Spring Data JPA
 Gradle 7.3
 Swagger 3.0
 
-H2 Database 2.2.224
-MariaDB 11.3.2
+H2 Database 2.2.224 (로컬 & 개발용)
+MariaDB 11.3.2 (운영용)
 ```
 
 ## 프로젝트 설정 및 실행 방법 (macOS 기준)
@@ -271,6 +272,11 @@ Test coverage 확인을 위해 `Jacoco`를 사용하였습니다. (ver 0.8.7) <b
 
 ```bash
 ./gradlew check
+```
+
+- Test만 실행하려는 경우: 터미널에서 아래의 명령어를 입력하여 test만 실행시킬 수 있습니다.
+```bash
+./gradlew test
 ```
 
 Test coverage 기준은 각각 80% 이상이며, <br> 

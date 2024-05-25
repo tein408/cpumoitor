@@ -1,6 +1,7 @@
 package com.cpumonitor;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -53,7 +54,7 @@ public class CpuUsageServiceTest {
     public void testSaveCpuUsage_InvalidData() {
         CpuUsageDTO cpuUsageDTO = null;
 
-        Assertions.assertThrows(InvalidDataException.class, () -> {
+        assertThrows(InvalidDataException.class, () -> {
             cpuUsageService.saveCpuUsage(cpuUsageDTO);
         });
 
@@ -96,7 +97,7 @@ public class CpuUsageServiceTest {
 
         when(cpuUsageRepository.getCpuUsageBetween(startDateTime, endDateTime)).thenThrow(RuntimeException.class);
 
-        Assertions.assertThrows(CpuUsageServiceException.class, () -> {
+        assertThrows(CpuUsageServiceException.class, () -> {
             cpuUsageService.getMinuteCpuUsage(startDateTime, endDateTime);
         });
     }
@@ -107,7 +108,7 @@ public class CpuUsageServiceTest {
         LocalDateTime dateTime = LocalDateTime.now();
         List<HourlyUsageDTO> dummyHourlyUsageDTOList = new ArrayList<>();
         dummyHourlyUsageDTOList.add(new HourlyUsageDTO(
-            dateTime.toString(), 10.0, 20.0, 15.0,
+                dateTime.toString(), 10.0, 20.0, 15.0,
                 5.0, 15.0, 10.0,
                 2.0, 8.0, 5.0));
 
@@ -137,7 +138,7 @@ public class CpuUsageServiceTest {
         LocalDateTime endDateTime = LocalDateTime.of(date, LocalTime.MAX);
         when(cpuUsageRepository.findHourlyUsage(startDateTime, endDateTime)).thenThrow(RuntimeException.class);
 
-        Assertions.assertThrows(CpuUsageServiceException.class, () -> {
+        assertThrows(CpuUsageServiceException.class, () -> {
             cpuUsageService.getHourlyCpuUsage(date, date);
         });
     }
@@ -180,7 +181,7 @@ public class CpuUsageServiceTest {
 
         when(cpuUsageRepository.findDailyUsage(startDateTime, endDateTime)).thenThrow(RuntimeException.class);
 
-        Assertions.assertThrows(CpuUsageServiceException.class, () -> {
+        assertThrows(CpuUsageServiceException.class, () -> {
             cpuUsageService.getDailyCpuUsage(startDate, endDate);
         });
     }
