@@ -4,7 +4,7 @@ macOS, Linux와 같은 유닉스 기반의 운영체제에서 동작합니다.
 
 ## 개발 환경
 
-```
+```yml
 Java 11
 Spring Boot 2.5.8
 Spring Data JPA
@@ -79,28 +79,28 @@ MariaDB 11.3.2 (운영용)
         ```
 
         (5) 유저 생성
-        ```bash
+        ```sql
         create user 'cpumonitor'@'127.0.0.1' identified by 'cpumonitor13579';
         ```
 
         (6) 데이터베이스 생성
-        ```bash
+        ```sql
         create database cpumonitor;
         ```
 
         (7) 권한 설정
-        ```bash
+        ```sql
         GRANT ALL PRIVILEGES ON cpumonitor.* TO 'cpumonitor'@'127.0.0.1';
         FLUSH PRIVILEGES;
         ```
 
         8. 데이터베이스 확인
-        ```bash
+        ```sql
         show databases;
         ```
 
         9. 종료
-        ```bash
+        ```sql
         \q
         ```
 
@@ -122,6 +122,22 @@ MariaDB 11.3.2 (운영용)
     > 프로젝트 최초 실행시에는 17번 줄의 `ddl-auto: none` 설정을 `ddl-auto: create` 혹은 `ddl-auto: update`로 해주어야만 테이블이 생성됩니다.
     이후 실행시에는 다시 `ddl-auto: none`으로 바꾸어 사용합니다.
 
+    ```yml
+    spring:
+      config:
+        activate:
+          on-profile: main
+      datasource:
+        url: jdbc:mariadb://localhost:3306/cpumonitor
+        username: cpumonitor
+        password: cpumonitor13579
+        driver-class-name: org.mariadb.jdbc.Driver
+      jpa:
+        hibernate:
+          ddl-auto: none # 최초 실행시 update 혹은 create 사용, 이후는 none 사용
+      ```
+    
+
 5. 필요한 환경에 맞춰 실행합니다
 
     ```bash
@@ -138,6 +154,8 @@ MariaDB 11.3.2 (운영용)
 6. 접속
 
     서버가 성공적으로 시작되면 `http://localhost:8080/swagger-ui/index.html`에 액세스할 수 있습니다.
+   
+    <img width="1450" alt="image" src="https://github.com/tein408/cpumoitor/assets/75615404/68afa23c-e3b2-4726-8997-07746cef6fe6">
 
 ## API 문서
 
@@ -280,7 +298,9 @@ Test coverage 확인을 위해 `Jacoco`를 사용하였습니다. (ver 0.8.7) <b
 ```
 
 Test coverage 기준은 각각 80% 이상이며, <br> 
-현재 Line coverage 96%, Branch coverage 83% 입니다.
+현재 Line coverage 100%, Branch coverage 100% 입니다.
+
+<img width="1045" alt="image" src="https://github.com/tein408/cpumoitor/assets/75615404/c64a2d50-f9b3-4f42-bf44-b9e769d72c26">
 
 ## 스케쥴러
 
