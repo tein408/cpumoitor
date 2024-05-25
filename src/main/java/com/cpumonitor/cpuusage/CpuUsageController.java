@@ -44,10 +44,13 @@ public class CpuUsageController {
      * @param endDateTime   종료 날짜 및 시간입니다.
      * @return CPU 사용률 데이터 목록입니다.
      */
-    @ApiOperation(value = "분 단위 CPU 사용률 데이터 조회", notes = "시작 시간과 종료 시간 사이의 분 단위 CPU 사용률 데이터를 조회합니다. 입력하지 않은 경우 최근 1주의 데이터를 제공합니다.")
+    @ApiOperation(
+        value = "분 단위 CPU 사용률 데이터 조회", 
+        notes = "시작 시간과 종료 시간 사이의 분 단위 CPU 사용률 데이터를 조회합니다. <br> <b>파라미터를 둘 중 하나라도 입력하지 않은 경우 최근 1주의 데이터를 제공합니다.</b>"
+    )
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "성공적으로 조회됨"),
-            @ApiResponse(code = 500, message = "서버 오류")
+        @ApiResponse(code = 200, message = "성공적으로 조회됨", response = CpuUsageDTO.class, responseContainer = "List"),
+        @ApiResponse(code = 500, message = "서버 오류", response = String.class)
     })
     @GetMapping("/cpu-usage/minute")
     public ResponseEntity<?> getMinuteCpuUsage(
@@ -79,10 +82,13 @@ public class CpuUsageController {
      * @param date 데이터를 조회할 날짜입니다.
      * @return 시간 단위 CPU 사용률 데이터 목록입니다.
      */
-    @ApiOperation(value = "시간 단위 CPU 사용률 데이터 조회", notes = "지정된 날짜의 시간 단위 CPU 사용률 데이터를 조회합니다. 입력하지 않은 경우 최근 3달의 데이터를 제공합니다.")
+    @ApiOperation(
+        value = "시간 단위 CPU 사용률 데이터 조회", 
+        notes = "지정된 날짜의 시간 단위 CPU 사용률 데이터를 조회합니다. <br><b>파라미터를 입력하지 않은 경우 최근 3달의 데이터를 제공합니다.</b>"
+    )
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "성공적으로 조회됨"),
-            @ApiResponse(code = 500, message = "서버 오류")
+        @ApiResponse(code = 200, message = "성공적으로 조회됨", response = HourlyUsageDTO.class, responseContainer = "List"),
+        @ApiResponse(code = 500, message = "서버 오류", response = String.class)
     })
     @GetMapping("/cpu-usage/hour")
     public ResponseEntity<?> getHourlyCpuUsage(
@@ -114,10 +120,13 @@ public class CpuUsageController {
      * @param endDate   조회할 종료 날짜입니다.
      * @return 일 단위 CPU 사용률 데이터 목록입니다.
      */
-    @ApiOperation(value = "일 단위 CPU 사용률 데이터 조회", notes = "지정된 시작 날짜와 종료 날짜 사이의 일 단위 CPU 사용률 데이터를 조회합니다. 입력하지 않은 경우 최근 1년의 데이터를 제공합니다.")
+    @ApiOperation(
+        value = "일 단위 CPU 사용률 데이터 조회", 
+        notes = "지정된 시작 날짜와 종료 날짜 사이의 일 단위 CPU 사용률 데이터를 조회합니다. <br><b>파라미터를 둘 중 하나라도 입력하지 않은 경우 최근 1년의 데이터를 제공합니다.</b>"
+    )
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "성공적으로 조회됨"),
-            @ApiResponse(code = 500, message = "서버 오류")
+        @ApiResponse(code = 200, message = "성공적으로 조회됨", response = DailyUsageDTO.class, responseContainer = "List"),
+        @ApiResponse(code = 500, message = "서버 오류", response = String.class)
     })
     @GetMapping("/cpu-usage/day")
     public ResponseEntity<?> getDailyCpuUsage(
