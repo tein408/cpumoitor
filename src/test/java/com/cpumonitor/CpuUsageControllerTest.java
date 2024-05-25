@@ -18,6 +18,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
+import java.time.format.DateTimeFormatter;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
@@ -52,6 +53,9 @@ public class CpuUsageControllerTest {
         when(cpuUsageService.getMinuteCpuUsage(any(LocalDateTime.class), any(LocalDateTime.class)))
                 .thenReturn(cpuUsageDTOList);
 
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS");
+        String formattedDateTime = startDateTime.format(formatter);
+
         mockMvc.perform(get("/api/cpu-usage/minute")
                 .param("startDateTime", startDateTime.toString())
                 .param("endDateTime", endDateTime.toString())
@@ -61,28 +65,71 @@ public class CpuUsageControllerTest {
                 .andExpect(jsonPath("$[0].userUsage", is(cpuUsageDTO.getUserUsage())))
                 .andExpect(jsonPath("$[0].systemUsage", is(cpuUsageDTO.getSystemUsage())))
                 .andExpect(jsonPath("$[0].idleUsage", is(cpuUsageDTO.getIdleUsage())))
-                .andExpect(jsonPath("$[0].recordedAt", is(cpuUsageDTO.getRecordedAt().toString())));
+                .andExpect(jsonPath("$[0].recordedAt", is(formattedDateTime)));
     }
 
     @Test
-    void getMinuteCpuUsage_NoParams_ReturnsDataForLastWeek() throws Exception {
-        List<CpuUsageDTO> mockData = Collections.singletonList(
-                new CpuUsageDTO(10.0, 20.0, 70.0, LocalDateTime.now()));
+    void getMinuteCpuUsage_NullStartDateTime_ReturnsDataForLastWeek() throws Exception {
+        LocalDateTime currDateTime = LocalDateTime.now();
+        List<CpuUsageDTO> mockData = Collections.singletonList(new CpuUsageDTO(10.0, 20.0, 70.0, currDateTime));
 
-        when(cpuUsageService.getMinuteCpuUsage(any(LocalDateTime.class), any(LocalDateTime.class))).thenReturn(mockData);
+        when(cpuUsageService.getMinuteCpuUsage(any(LocalDateTime.class), any(LocalDateTime.class)))
+                .thenReturn(mockData);
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS");
+        String formattedDateTime = currDateTime.format(formatter);
+
+        mockMvc.perform(get("/api/cpu-usage/minute")
+                .param("endDateTime", "2024-05-01T23:59:59")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$[0].recordedAt").value(formattedDateTime));
+        verify(cpuUsageService, times(1)).getMinuteCpuUsage(any(LocalDateTime.class), any(LocalDateTime.class));
+    }
+
+    @Test
+    void getMinuteCpuUsage_NullEndDateTime_ReturnsDataForLastWeek() throws Exception {
+        LocalDateTime currDateTime = LocalDateTime.now();
+        List<CpuUsageDTO> mockData = Collections.singletonList(new CpuUsageDTO(10.0, 20.0, 70.0, currDateTime));
+
+        when(cpuUsageService.getMinuteCpuUsage(any(LocalDateTime.class), any(LocalDateTime.class)))
+                .thenReturn(mockData);
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS");
+        String formattedDateTime = currDateTime.format(formatter);
+
+        mockMvc.perform(get("/api/cpu-usage/minute")
+                .param("startDateTime", "2024-05-01T23:59:59")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$[0].recordedAt").value(formattedDateTime));
+        verify(cpuUsageService, times(1)).getMinuteCpuUsage(any(LocalDateTime.class), any(LocalDateTime.class));
+    }
+
+    @Test
+    void getMinuteCpuUsage_BothDateTimesNull_ReturnsDataForLastWeek() throws Exception {
+        LocalDateTime currDateTime = LocalDateTime.now();
+        List<CpuUsageDTO> mockData = Collections.singletonList(new CpuUsageDTO(10.0, 20.0, 70.0, currDateTime));
+
+        when(cpuUsageService.getMinuteCpuUsage(any(LocalDateTime.class), any(LocalDateTime.class)))
+                .thenReturn(mockData);
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS");
+        String formattedDateTime = currDateTime.format(formatter);
 
         mockMvc.perform(get("/api/cpu-usage/minute")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].userUsage").value(10.0))
-                .andExpect(jsonPath("$[0].systemUsage").value(20.0))
-                .andExpect(jsonPath("$[0].idleUsage").value(70.0));
+                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$[0].recordedAt").value(formattedDateTime));
         verify(cpuUsageService, times(1)).getMinuteCpuUsage(any(LocalDateTime.class), any(LocalDateTime.class));
     }
 
     @Test
     void getMinuteCpuUsage_ShouldReturnInternalServerErrorOnException() throws Exception {
-        Mockito.when(cpuUsageService.getMinuteCpuUsage(any(LocalDateTime.class), any(LocalDateTime.class)))
+        when(cpuUsageService.getMinuteCpuUsage(any(LocalDateTime.class), any(LocalDateTime.class)))
                 .thenThrow(new RuntimeException("Database error"));
 
         mockMvc.perform(get("/api/cpu-usage/minute")
@@ -96,7 +143,8 @@ public class CpuUsageControllerTest {
     void getHourlyCpuUsage_ShouldReturnListOfHourlyUsageDTO() throws Exception {
         LocalDate date = LocalDate.of(2024, 5, 1);
         LocalDateTime dateTime = LocalDateTime.of(2024, 5, 1, 0, 0, 1);
-        HourlyUsageDTO hourlyUsageDTO = new HourlyUsageDTO(dateTime.toString(), 10.0, 20.0, 15.0, 5.0, 15.0, 10.0, 2.0, 8.0, 5.0);
+        HourlyUsageDTO hourlyUsageDTO = new HourlyUsageDTO(dateTime.toString(), 10.0, 20.0, 15.0, 5.0, 15.0, 10.0, 2.0,
+                8.0, 5.0);
         List<HourlyUsageDTO> hourlyUsageDTOList = Collections.singletonList(hourlyUsageDTO);
 
         when(cpuUsageService.getHourlyCpuUsage(any(LocalDate.class), any(LocalDate.class)))
@@ -174,16 +222,55 @@ public class CpuUsageControllerTest {
     }
 
     @Test
-    void getDailyCpuUsage_NoParams_ReturnsDataForLastYear() throws Exception {
+    void getDailyCpuUsage_NullStartDate_ReturnsDataForLastYear() throws Exception {
+        LocalDate currDate = LocalDate.now();
         List<DailyUsageDTO> mockData = Collections.singletonList(
-                new DailyUsageDTO("2023-01-01", 10.0, 20.0, 30.0, 40.0, 50.0, 60.0, 70.0, 80.0, 90.0));
+                new DailyUsageDTO(currDate.toString(), 10.0, 20.0, 15.0, 5.0, 15.0, 10.0, 2.0, 8.0, 5.0));
 
-        when(cpuUsageService.getDailyCpuUsage(any(LocalDate.class), any(LocalDate.class))).thenReturn(mockData);
+        when(cpuUsageService.getDailyCpuUsage(any(LocalDate.class), any(LocalDate.class)))
+                .thenReturn(mockData);
+
+        mockMvc.perform(get("/api/cpu-usage/day")
+                .param("endDate", "2024-05-01")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$[0].date").value(currDate.toString()));
+        verify(cpuUsageService, times(1)).getDailyCpuUsage(any(LocalDate.class), any(LocalDate.class));
+    }
+
+    @Test
+    void getDailyCpuUsage_NullEndDate_ReturnsDataForLastYear() throws Exception {
+        LocalDate currDate = LocalDate.now();
+        List<DailyUsageDTO> mockData = Collections.singletonList(
+                new DailyUsageDTO(currDate.toString(), 10.0, 20.0, 15.0, 5.0, 15.0, 10.0, 2.0, 8.0, 5.0));
+
+        when(cpuUsageService.getDailyCpuUsage(any(LocalDate.class), any(LocalDate.class)))
+                .thenReturn(mockData);
+
+        mockMvc.perform(get("/api/cpu-usage/day")
+                .param("startDate", "2024-05-01")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$[0].date").value(currDate.toString()));
+        verify(cpuUsageService, times(1)).getDailyCpuUsage(any(LocalDate.class), any(LocalDate.class));
+    }
+
+    @Test
+    void getDailyCpuUsage_NoParams_ReturnsDataForLastYear() throws Exception {
+        LocalDate currDate = LocalDate.now();
+        List<DailyUsageDTO> mockData = Collections.singletonList(
+                new DailyUsageDTO(currDate.toString(), 10.0, 20.0, 15.0, 5.0, 15.0, 10.0, 2.0, 8.0, 5.0));
+
+        when(cpuUsageService.getDailyCpuUsage(any(LocalDate.class), any(LocalDate.class)))
+                .thenReturn(mockData);
 
         mockMvc.perform(get("/api/cpu-usage/day")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].date").value("2023-01-01"));
+                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$[0].date").value(currDate.toString()));
         verify(cpuUsageService, times(1)).getDailyCpuUsage(any(LocalDate.class), any(LocalDate.class));
     }
 
