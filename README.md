@@ -301,7 +301,7 @@ Test coverage 기준은 각각 80% 이상이며, <br>
 
 <img width="1045" alt="image" src="https://github.com/tein408/cpumoitor/assets/75615404/c64a2d50-f9b3-4f42-bf44-b9e769d72c26">
 
-## 스케쥴러
+## CPU 사용률 수집 Scheduler
 
 > CPU의 사용률을 분 단위로 수집하기 위해 스케쥴러를 사용하였습니다. <br>
 macOS, Linux와 같은 유닉스 기반의 운영체제에서 동작합니다.
