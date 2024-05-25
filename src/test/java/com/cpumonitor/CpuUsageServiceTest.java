@@ -107,7 +107,7 @@ public class CpuUsageServiceTest {
         LocalDateTime dateTime = LocalDateTime.now();
         List<HourlyUsageDTO> dummyHourlyUsageDTOList = new ArrayList<>();
         dummyHourlyUsageDTOList.add(new HourlyUsageDTO(
-            dateTime.toString(), 10.0, 20.0, 15.0,
+                dateTime.toString(), 10.0, 20.0, 15.0,
                 5.0, 15.0, 10.0,
                 2.0, 8.0, 5.0));
 
