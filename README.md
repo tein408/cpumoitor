@@ -118,6 +118,8 @@ MariaDB 11.3.2
 4. 데이터베이스 설정을 수정합니다. (선택사항)
 
     `application.yml` 파일에서 접속에 필요한 데이터베이스 관련 설정을 수정합니다.
+    > 프로젝트 최초 실행시에는 17번 줄의 `ddl-auto: none` 설정을 `ddl-auto: create` 혹은 `ddl-auto: update`로 해주어야만 테이블이 생성됩니다.
+    이후 실행시에는 다시 `ddl-auto: none`으로 바꾸어 사용합니다.
 
 5. 필요한 환경에 맞춰 실행합니다
 
@@ -148,6 +150,7 @@ MariaDB 11.3.2
       (예: 2024-05-01T00:00:00)
     - endDateTime (종료 날짜 및 시간): YYYY-MM-DDTHH:MM:SS 형식의 문자열
       (예: 2024-05-01T23:59:59)
+    - 파라미터를 입력하지 않은 경우 최근 1주간 데이터를 조회합니다.
 - 성공 응답:
     - Status Code: 200
     - Content: 분 단위 CPU 사용률 데이터 목록
@@ -177,6 +180,7 @@ MariaDB 11.3.2
 - 파라미터:
     - date (조회할 날짜): YYYY-MM-DD 형식의 문자열
       (예: 2024-05-01)
+    - 파라미터를 입력하지 않은 경우 최근 3달간 데이터를 조회합니다.
 - 성공 응답:
     - Status Code: 200
     - Content: 시간 단위 CPU 사용률 데이터 목록
@@ -222,6 +226,7 @@ MariaDB 11.3.2
       (예: 2024-05-01)
     - endDate (조회할 종료 날짜): YYYY-MM-DD 형식의 문자열
       (예: 2024-05-05)
+    - 파라미터를 입력하지 않은 경우 최근 1년간 데이터를 조회합니다.
 - 성공 응답:
     - Status Code: 200
     - Content: 일 단위 CPU 사용률 데이터 목록
@@ -261,8 +266,29 @@ MariaDB 11.3.2
 
 ## Test Coverage 확인
 
+Test coverage 확인을 위해 `Jacoco`를 사용하였습니다. (ver 0.8.7) <br>
 터미널에서 아래의 명령어를 입력한 후 프로젝트 폴더 내의 `cpumonitor/build/jacoco/report.html` 경로에서 `index.html` 을 실행하여 확인할 수 있습니다.
 
 ```bash
 ./gradlew check
 ```
+
+Test coverage 기준은 각각 80% 이상이며, <br> 
+현재 Line coverage 96%, Branch coverage 83% 입니다.
+
+## 스케쥴러
+
+> CPU의 사용률을 분 단위로 수집하기 위해 스케쥴러를 사용하였습니다. <br>
+macOS, Linux와 같은 유닉스 기반의 운영체제에서 동작합니다.
+
+- `@Scheduled(cron = "0 * * * * *")` 를 통해 매 분마다 실행됩니다.
+- `ProcessBuilder`를 통해 `top -l 1 | grep -E "^CPU" | awk '{print $3, $5, $7}'` 명령어를 터미널에서 실행하게 됩니다.
+    ```bash
+    # 실행 명령어
+    top -l 1 | grep -E "^CPU" | awk '{print $3, $5, $7}'
+
+    # 실행 결과 예시
+    2.23% 5.75% 92.1%
+    ```
+- 이를 통해 가져온 데이터를 각각 `user_usage`, `system_usage`, `idle_usage`로 데이터베이스에 저장합니다.
+- 만약 명령어를 실행시키거나 데이터 베이스에 저장할 때 에러가 발생하는 경우 로그에 저장합니다.
