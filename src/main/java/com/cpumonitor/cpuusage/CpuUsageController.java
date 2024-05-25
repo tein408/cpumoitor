@@ -52,8 +52,11 @@ public class CpuUsageController {
     })
     @GetMapping("/cpu-usage/minute")
     public ResponseEntity<List<CpuUsageDTO>> getMinuteCpuUsage(
-            @ApiParam(value = "조회할 시작 날짜 및 시간 (예: 2024-05-01T00:00:00)", required = false, example = "2024-05-01T00:00:00") @RequestParam(value = "startDateTime", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDateTime,
-            @ApiParam(value = "조회할 종료 날짜 및 시간 (예: 2024-05-01T23:59:59)", required = false, example = "2024-05-01T23:59:59") @RequestParam(value = "endDateTime", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDateTime) {
+            @ApiParam(value = "조회할 시작 날짜 및 시간 (예: 2024-05-01T00:00:00)", required = false, example = "2024-05-01T00:00:00") 
+            @RequestParam(value = "startDateTime", required = false) 
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDateTime,
+            @ApiParam(value = "조회할 종료 날짜 및 시간 (예: 2024-05-01T23:59:59)", required = false, example = "2024-05-01T23:59:59") @RequestParam(value = "endDateTime", required = false) 
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDateTime) {
         if (startDateTime == null || endDateTime == null) {
             endDateTime = LocalDateTime.now();
             startDateTime = endDateTime.minusWeeks(1);
@@ -82,7 +85,9 @@ public class CpuUsageController {
     })
     @GetMapping("/cpu-usage/hour")
     public ResponseEntity<List<HourlyUsageDTO>> getHourlyCpuUsage(
-            @ApiParam(value = "조회할 날짜 (예: 2024-05-01)", required = false, example = "2024-05-01") @RequestParam(value = "date", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+            @ApiParam(value = "조회할 날짜 (예: 2024-05-01)", required = false, example = "2024-05-01") 
+            @RequestParam(value = "date", required = false) 
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
         LocalDate startDate = date;
         LocalDate endDate = date;
         if (date == null) {
@@ -113,8 +118,12 @@ public class CpuUsageController {
     })
     @GetMapping("/cpu-usage/day")
     public ResponseEntity<List<DailyUsageDTO>> getDailyCpuUsage(
-            @ApiParam(value = "조회할 시작 날짜 (예: 2024-05-01)", required = false, example = "2024-05-01") @RequestParam(value = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-            @ApiParam(value = "조회할 종료 날짜 (예: 2024-05-31)", required = false, example = "2024-05-31") @RequestParam(value = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+            @ApiParam(value = "조회할 시작 날짜 (예: 2024-05-01)", required = false, example = "2024-05-01") 
+            @RequestParam(value = "startDate", required = false) 
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @ApiParam(value = "조회할 종료 날짜 (예: 2024-05-31)", required = false, example = "2024-05-31") 
+            @RequestParam(value = "endDate", required = false) 
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
         if (startDate == null || endDate == null) {
             endDate = LocalDate.now();
             startDate = endDate.minusYears(1);
